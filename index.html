@@ -1,0 +1,321 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>fvlxt's Inferno Cape Progression | TzKal-Zuk Defeated</title>
+    
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <!-- Background Canvas for Flame Embers -->
+    <canvas id="embers-canvas"></canvas>
+
+    <div class="container">
+        <!-- Header -->
+        <header class="header">
+            <div class="header-content">
+                <div class="title-badge">OSRS INFERNO JOURNAL</div>
+                <h1 class="title">FVLXT'S<br>PATH TO THE INFERNAL CAPE</h1>
+                <p class="subtitle">An interactive chronicle of 41 attempts to defeat TzKal-Zuk. Huge thanks to <a href="https://www.infernotrainer.com/" target="_blank" class="volcanic-link">Inferno Trainer Simulator</a>, Gabijooj and Renato for support.</p>
+            </div>
+            <div class="header-visual">
+                <div class="zuk-frame">
+                    <img src="TzKal-Zuk.webp" alt="TzKal-Zuk" id="header-zuk-img" class="zuk-image">
+                    <div class="flame-glow"></div>
+                </div>
+            </div>
+        </header>
+
+        <!-- Stats Overview Cards -->
+        <section class="stats-grid">
+            <div class="stat-card gold-border">
+                <div class="stat-icon-wrapper gold-text">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5"/>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Final Status</span>
+                    <span class="stat-value gold-text glow-text">CAPE OBTAINED</span>
+                    <span class="stat-subtext">Completed on Attempt #41</span>
+                </div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-icon-wrapper red-text">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="12" cy="12" r="10"/>
+                        <path d="M12 8v4l3 3"/>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Total Attempts</span>
+                    <span class="stat-value">41 Runs</span>
+                    <span class="stat-subtext">Over various sessions</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper orange-text">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <polygon points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2"/>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Zuk Encounters</span>
+                    <span class="stat-value">8 Times</span>
+                    <span class="stat-subtext">Reached Wave 69</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper yellow-text">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M17 9V7a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v6a2 2 0 0 0 2 2h2" />
+                        <rect x="7" y="9" width="14" height="10" rx="2" />
+                        <circle cx="14" cy="14" r="2" />
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Supplies Budget</span>
+                    <span class="stat-value yellow-text">24.6M - 41.0M GP</span>
+                    <span class="stat-subtext">~600k-1M GP per attempt</span>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon-wrapper purple-text">
+                    <svg viewBox="0 0 24 24" width="24" height="24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/>
+                        <line x1="12" y1="9" x2="12" y2="13"/>
+                        <line x1="12" y1="17" x2="12.01" y2="17"/>
+                    </svg>
+                </div>
+                <div class="stat-info">
+                    <span class="stat-label">Primary Obstacle</span>
+                    <span class="stat-value">Blobs</span>
+                    <span class="stat-subtext">Responsible for 14 deaths</span>
+                </div>
+            </div>
+        </section>
+
+        <!-- Main Visualization Section -->
+        <main class="dashboard-layout">
+            <!-- Left Panel: Dotplot Chart -->
+            <div class="chart-container">
+                <div class="chart-header">
+                    <div class="chart-title-area">
+                        <h2>Progression Dotplot</h2>
+                        <p class="chart-description">Every dot represents an attempt. Hover over dots to inspect. Click a dot to pin details.</p>
+                    </div>
+                    <div class="chart-elements-controls">
+                        <button id="toggle-trend" class="btn active">Show Trendline</button>
+                        <button id="export-png" class="btn">Export PNG</button>
+                    </div>
+                </div>
+
+                <!-- Interactive Legend -->
+                <div class="legend-container">
+                    <span class="legend-title">Filter by Category:</span>
+                    <div class="legend-tags">
+                        <button class="legend-tag active" data-category="all">
+                            <span class="dot-indicator color-all"></span> All Attempts
+                        </button>
+                        <button class="legend-tag" data-category="Victory">
+                            <span class="dot-indicator color-victory"></span> Victory (Wave 69)
+                        </button>
+                        <button class="legend-tag" data-category="Zuk">
+                            <span class="dot-indicator color-zuk"></span> Zuk (Wave 69)
+                        </button>
+                        <button class="legend-tag" data-category="Blob">
+                            <span class="dot-indicator color-blob"></span> Blob Deaths
+                        </button>
+                        <button class="legend-tag" data-category="Flick/Prayer">
+                            <span class="dot-indicator color-prayer"></span> Prayer Flick
+                        </button>
+                        <button class="legend-tag" data-category="Panic/Melee/Range">
+                            <span class="dot-indicator color-melee"></span> Melee/Range Panic
+                        </button>
+                        <button class="legend-tag" data-category="Distraction">
+                            <span class="dot-indicator color-distract"></span> Sleep/Distraction
+                        </button>
+                        <button class="legend-tag" data-category="Supplies">
+                            <span class="dot-indicator color-supplies"></span> Supplies/Other
+                        </button>
+                    </div>
+                </div>
+
+                <!-- SVG Dotplot -->
+                <div class="svg-wrapper">
+                    <svg id="dotplot" viewBox="0 0 1000 500" preserveAspectRatio="xMidYMid meet">
+                        <!-- Definitions for gradients/glows -->
+                        <defs>
+                            <!-- Glow Filters -->
+                            <filter id="glow-victory" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="6" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                            <filter id="glow-lava" x="-20%" y="-20%" width="140%" height="140%">
+                                <feGaussianBlur stdDeviation="3" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                            <filter id="glow-line" x="-10%" y="-10%" width="120%" height="120%">
+                                <feGaussianBlur stdDeviation="4" result="blur" />
+                                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+                            </filter>
+                            
+                            <!-- Gradients -->
+                            <linearGradient id="trend-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
+                                <stop offset="0%" stop-color="#ff3c00" stop-opacity="0.3"/>
+                                <stop offset="50%" stop-color="#ff8c00" stop-opacity="0.8"/>
+                                <stop offset="100%" stop-color="#ffd700" stop-opacity="1"/>
+                            </linearGradient>
+                            <linearGradient id="lava-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#ff4500"/>
+                                <stop offset="100%" stop-color="#8b0000"/>
+                            </linearGradient>
+                            <linearGradient id="victory-grad" x1="0%" y1="0%" x2="0%" y2="100%">
+                                <stop offset="0%" stop-color="#ffd700"/>
+                                <stop offset="100%" stop-color="#ff8c00"/>
+                            </linearGradient>
+                        </defs>
+                        
+                        <!-- Grid lines and backgrounds rendered via JS -->
+                        <g id="chart-background-bands"></g>
+                        <g id="chart-grid"></g>
+                        
+                        <!-- Trendlines -->
+                        <g id="chart-trendlines"></g>
+                        
+                        <!-- Dots -->
+                        <g id="chart-dots"></g>
+                        
+                        <!-- Axes and Labels -->
+                        <g id="chart-axes"></g>
+                    </svg>
+                    
+                    <!-- Tooltip Element -->
+                    <div id="tooltip" class="tooltip hidden"></div>
+                </div>
+            </div>
+
+            <!-- Right Panel: Sidebar Detail Card -->
+            <aside class="details-panel">
+                <div class="card detail-card" id="detail-card">
+                    <!-- Default initial content, replaced by JS selection -->
+                    <div class="detail-initial-state">
+                        <div class="cape-icon-container glow-gold">
+                            <!-- Custom SVG Infernal Cape -->
+                            <svg viewBox="0 0 64 64" class="infernal-cape-svg">
+                                <path d="M12,12 L52,12 L44,58 L32,62 L20,58 Z" fill="url(#lava-grad)" stroke="#3a1100" stroke-width="2"/>
+                                <path d="M22,14 L42,14 L36,54 L32,57 L28,54 Z" fill="#ffd700" opacity="0.3"/>
+                                <path d="M12,12 L20,58 L32,62 Z" fill="#2d0500"/>
+                                <path d="M52,12 L44,58 L32,62 Z" fill="#4d1000"/>
+                                <circle cx="32" cy="18" r="4" fill="#ffd700" filter="url(#glow-victory)"/>
+                                <path d="M32,22 L32,45" stroke="#ffd700" stroke-width="2"/>
+                            </svg>
+                        </div>
+                        <h3>Interactive Chronicle</h3>
+                        <p class="desc">Select any dot on the chart to read the journal entry, see death causes, and analyze mechanics for that run.</p>
+                        <div class="highlight-action-box">
+                            <span class="hint-text">Check out the winning run:</span>
+                            <button id="view-victory-btn" class="btn btn-gold">View Attempt #41 (Victory)</button>
+                        </div>
+                    </div>
+                    
+                    <!-- Detail Display State (Initially hidden) -->
+                    <div class="detail-active-state hidden" id="detail-active">
+                        <div class="detail-header-row">
+                            <div class="attempt-badge" id="detail-attempt-number">Attempt #41</div>
+                            <div class="wave-badge" id="detail-wave-badge">Wave 69</div>
+                        </div>
+                        
+                        <div class="detail-enemy-showcase">
+                            <div class="category-icon-box" id="detail-category-icon">
+                                <!-- Dynamic SVG injected here -->
+                            </div>
+                            <div class="category-info-text">
+                                <span class="category-lbl">Cause of End</span>
+                                <span class="category-val" id="detail-category-name">Victory</span>
+                            </div>
+                        </div>
+
+                        <div class="detail-body">
+                            <div class="journal-heading">
+                                <span>RUNNER'S DIARY</span>
+                                <span class="lang-tag">TRANSLATED DIARY</span>
+                            </div>
+                            <blockquote class="journal-quote" id="detail-journal-note">
+                                "I won."
+                            </blockquote>
+                            
+                            <div class="mechanics-breakdown" id="detail-mechanics">
+                                <h4>Mechanical Breakdown & Tips</h4>
+                                <p id="detail-analysis">Congratulations! The inferno has been conquered. This is a monumental achievement in OSRS.</p>
+                            </div>
+                        </div>
+                        
+                        <div class="detail-footer">
+                            <button id="prev-attempt-btn" class="btn btn-nav">← Prev</button>
+                            <button id="next-attempt-btn" class="btn btn-nav">Next →</button>
+                        </div>
+                    </div>
+                </div>
+            </aside>
+        </main>
+
+        <!-- Loadout & Equipment Section -->
+        <section class="loadout-section">
+            <div class="section-header">
+                <h2>fvlxt's Inferno Loadout Setup</h2>
+                <p>The gear and inventory configurations used to conquer the final wave.</p>
+            </div>
+            <div class="loadout-grid">
+                <div class="loadout-card">
+                    <h3>Equipment Setup</h3>
+                    <div class="loadout-img-wrapper">
+                        <img src="gear.png" alt="Equipment Setup">
+                    </div>
+                    <p class="loadout-desc">Mainly range with Tormented/barrows gauntlets, Kodai wand and imbued Zamorak cape is more than enough mage bonus to freeze nibblers.</p>
+                </div>
+                <div class="loadout-card">
+                    <h3>Inventory Setup</h3>
+                    <div class="loadout-img-wrapper">
+                        <img src="inv.png" alt="Inventory Setup">
+                    </div>
+                    <p class="loadout-desc">3 Prayer Regeneration potions are mandatory, 8 Saradomin Brews, 2 Armadyl Brews, Rest Restore. Bring Ice and Blood Barrage. Blowpipe with dragon darts.</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Chronological Journal Section -->
+        <section class="journal-section">
+            <div class="section-header">
+                <h2>Chronological Run Log</h2>
+                <div class="search-box-wrapper">
+                    <svg viewBox="0 0 24 24" width="18" height="18" fill="none" stroke="currentColor" stroke-width="2">
+                        <circle cx="11" cy="11" r="8"/>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"/>
+                    </svg>
+                    <input type="text" id="log-search" placeholder="Search comments (e.g. blob, sleep, flick)...">
+                </div>
+            </div>
+            
+            <div class="log-grid" id="log-grid">
+                <!-- Injected via Javascript -->
+            </div>
+        </section>
+    </div>
+
+    <!-- Decorative Lava Bottom -->
+    <div class="lava-bottom-border"></div>
+
+    <script src="app.js"></script>
+</body>
+</html>
