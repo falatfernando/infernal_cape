@@ -516,7 +516,7 @@ function renderLog() {
     });
 }
 
-/* Export to PNG Implementation */
+/* Export to PNG Poster-Infographic Implementation */
 function exportToPNG() {
     const svgElement = document.getElementById('dotplot');
     
@@ -548,19 +548,149 @@ function exportToPNG() {
     const svgBlob = new Blob([svgString], { type: 'image/svg+xml;charset=utf-8' });
     const blobURL = URL.createObjectURL(svgBlob);
     
-    const image = new Image();
-    image.onload = () => {
+    // Create Promises for loading the SVG and Zuk images
+    const loadSvg = new Promise((resolve) => {
+        const image = new Image();
+        image.onload = () => resolve(image);
+        image.src = blobURL;
+    });
+
+    const loadZuk = new Promise((resolve) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = () => resolve(null); // If image loading fails, draw without Zuk
+        img.src = 'TzKal-Zuk.webp';
+    });
+
+    Promise.all([loadSvg, loadZuk]).then(([svgImg, zukImg]) => {
         const canvas = document.createElement('canvas');
-        canvas.width = 1000;
-        canvas.height = 500;
-        const context = canvas.getContext('2d');
+        // Let's make the canvas wider and taller for the infographic poster
+        canvas.width = 1200;
+        canvas.height = 960;
+        const ctx = canvas.getContext('2d');
         
-        // Draw the background color so it isn't transparent
-        context.fillStyle = '#0d0d11';
-        context.fillRect(0, 0, canvas.width, canvas.height);
+        // 1. Draw Poster Background
+        ctx.fillStyle = '#0c0c0f';
+        ctx.fillRect(0, 0, canvas.width, canvas.height);
         
-        context.drawImage(image, 0, 0);
+        // 2. Draw Top Volcanic Accent Line
+        const accentGrad = ctx.createLinearGradient(0, 0, canvas.width, 0);
+        accentGrad.addColorStop(0, '#ff3c00');
+        accentGrad.addColorStop(0.5, '#ff8c00');
+        accentGrad.addColorStop(1, '#ffd700');
+        ctx.fillStyle = accentGrad;
+        ctx.fillRect(0, 0, canvas.width, 6);
         
+        // 3. Draw Header Title and Subtitle
+        ctx.fillStyle = '#ffffff';
+        ctx.font = 'bold 30px "Cinzel", Georgia, serif';
+        ctx.fillText("FVLXT'S PATH TO THE INFERNAL CAPE", 60, 65);
+        
+        ctx.fillStyle = '#a0a0b5';
+        ctx.font = '14px "Inter", sans-serif';
+        ctx.fillText("An interactive chronicle of 41 attempts to defeat TzKal-Zuk & conquer OSRS's ultimate PvM challenge.", 60, 95);
+        ctx.fillText("Supporters: Gabijooj & Renato  •  Practice Tool: Inferno Trainer Simulator", 60, 115);
+        
+        // 4. Draw Zuk Image in top right
+        if (zukImg) {
+            // Draw a subtle background glow for Zuk
+            const glowGrad = ctx.createRadialGradient(1070, 75, 10, 1070, 75, 60);
+            glowGrad.addColorStop(0, 'rgba(255, 69, 0, 0.2)');
+            glowGrad.addColorStop(1, 'rgba(255, 69, 0, 0)');
+            ctx.fillStyle = glowGrad;
+            ctx.beginPath();
+            ctx.arc(1070, 75, 60, 0, Math.PI * 2);
+            ctx.fill();
+            
+            // Draw Zuk image centered
+            ctx.drawImage(zukImg, 1010, 15, 120, 120);
+        }
+
+        // 5. Draw KPI Cards Section
+        const kpis = [
+            { label: "FINAL STATUS", value: "CAPE OBTAINED", sub: "Completed on Attempt #41", color: "#ffd700" },
+            { label: "TOTAL ATTEMPTS", value: "41 RUNS", sub: "Over various sessions", color: "#ffffff" },
+            { label: "ZUK ENCOUNTERS", value: "8 TIMES", sub: "Reached Wave 69", color: "#ff4500" },
+            { label: "SUPPLIES BUDGET", value: "24.6M - 41.0M GP", sub: "~600k-1M GP per attempt", color: "#ffa726" }
+        ];
+
+        const cardWidth = 250;
+        const cardHeight = 80;
+        const cardGap = 26;
+        const startX = 60;
+        const startY = 160;
+
+        kpis.forEach((kpi, idx) => {
+            const x = startX + idx * (cardWidth + cardGap);
+            const y = startY;
+
+            // Draw Card Body
+            ctx.fillStyle = 'rgba(22, 22, 28, 0.8)';
+            ctx.fillRect(x, y, cardWidth, cardHeight);
+
+            // Draw Card Border
+            ctx.strokeStyle = idx === 0 ? 'rgba(255, 215, 0, 0.3)' : '#2b2b36';
+            ctx.lineWidth = 1.5;
+            ctx.strokeRect(x, y, cardWidth, cardHeight);
+
+            // Label
+            ctx.fillStyle = '#a0a0b5';
+            ctx.font = '10px "Inter", sans-serif';
+            ctx.fillText(kpi.label, x + 15, y + 22);
+
+            // Value
+            ctx.fillStyle = kpi.color;
+            ctx.font = 'bold 16px "Cinzel", Georgia, serif';
+            ctx.fillText(kpi.value, x + 15, y + 45);
+
+            // Subtext
+            ctx.fillStyle = '#6e6e80';
+            ctx.font = '10px "Inter", sans-serif';
+            ctx.fillText(kpi.sub, x + 15, y + 64);
+        });
+
+        // 6. Draw Dotplot SVG
+        // Scale to width = 1080, height = 540 (maintaining aspect ratio)
+        ctx.drawImage(svgImg, 60, 270, 1080, 540);
+
+        // 7. Draw Legend Section
+        const legendX = 60;
+        const legendY = 860;
+        
+        ctx.fillStyle = '#6e6e80';
+        ctx.font = '11px "Inter", sans-serif';
+        ctx.fillText("DEATH CATEGORIES:", legendX, legendY + 5);
+
+        const legendItems = [
+            { name: "Victory (Wave 69)", color: "#ffd700" },
+            { name: "Zuk (Wave 69)", color: "#ff4500" },
+            { name: "Blob Deaths", color: "#ff3333" },
+            { name: "Prayer Flick", color: "#ab47bc" },
+            { name: "Melee/Range Panic", color: "#ff7043" },
+            { name: "Sleep/Distraction", color: "#78909c" },
+            { name: "Supplies/Other", color: "#ffa726" }
+        ];
+
+        let currentX = legendX + 130;
+        legendItems.forEach(item => {
+            // Draw color dot
+            ctx.fillStyle = item.color;
+            ctx.beginPath();
+            ctx.arc(currentX, legendY, 5, 0, Math.PI * 2);
+            ctx.fill();
+
+            // Draw label
+            ctx.fillStyle = '#a0a0b5';
+            ctx.font = '11px "Inter", sans-serif';
+            ctx.fillText(item.name, currentX + 12, legendY + 4);
+
+            // Advance pointer
+            ctx.font = '11px "Inter", sans-serif';
+            const textWidth = ctx.measureText(item.name).width;
+            currentX += textWidth + 30;
+        });
+
+        // 8. Trigger Download
         const png = canvas.toDataURL('image/png');
         const downloadLink = document.createElement('a');
         downloadLink.href = png;
@@ -570,8 +700,7 @@ function exportToPNG() {
         document.body.removeChild(downloadLink);
         
         URL.revokeObjectURL(blobURL);
-    };
-    image.src = blobURL;
+    });
 }
 
 /* Event Listeners */

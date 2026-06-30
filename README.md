@@ -11,7 +11,7 @@ This repository houses a custom-built, responsive single-page web application fe
 This project is fully compatible with GitHub Pages out of the box (requires no build steps or frameworks).
 
 ### How to Deploy:
-1. **Push** this repository to your GitHub account (e.g., `fvlxt/infernal-cape-dashboard`).
+1. **Push** this repository to your GitHub account (e.g., `falatfernando/infernal_cape`).
 2. Navigate to your repository page on GitHub.
 3. Go to **Settings** ⚙️ > **Pages** (in the left-hand sidebar).
 4. Under **Build and deployment**:
@@ -19,7 +19,7 @@ This project is fully compatible with GitHub Pages out of the box (requires no b
    * **Branch**: Select `main` (or `master`) and keep the folder set to `/ (root)`.
 5. Click **Save**.
 6. Wait 1–2 minutes, and your site will be live at:
-   `https://fvlxt.github.io/infernal-cape/` (or your repository's name).
+   👉 **[https://falatfernando.github.io/infernal_cape/](https://falatfernando.github.io/infernal_cape/)**
 
 ---
 
