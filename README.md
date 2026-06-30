@@ -6,9 +6,26 @@ This repository houses a custom-built, responsive single-page web application fe
 
 ---
 
-## 🚀 How to View the Dashboard
+## 🌐 Live Deployment (GitHub Pages)
 
-To view the interactive dashboard locally, start a web server in the repository root directory.
+This project is fully compatible with GitHub Pages out of the box (requires no build steps or frameworks).
+
+### How to Deploy:
+1. **Push** this repository to your GitHub account (e.g., `fvlxt/infernal-cape-dashboard`).
+2. Navigate to your repository page on GitHub.
+3. Go to **Settings** ⚙️ > **Pages** (in the left-hand sidebar).
+4. Under **Build and deployment**:
+   * **Source**: Select `Deploy from a branch`.
+   * **Branch**: Select `main` (or `master`) and keep the folder set to `/ (root)`.
+5. Click **Save**.
+6. Wait 1–2 minutes, and your site will be live at:
+   `https://fvlxt.github.io/infernal-cape/` (or your repository's name).
+
+---
+
+## 💻 How to View Locally
+
+If you want to view or test the dashboard locally before pushing, start a web server in the repository root directory.
 
 ### Quick Start (Python)
 Run the following command in your terminal:
