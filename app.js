@@ -610,7 +610,7 @@ function exportToPNG() {
         const kpis = [
             { label: "FINAL STATUS", value: "CAPE OBTAINED", sub: "Completed on Attempt #41", color: "#ffd700" },
             { label: "TOTAL ATTEMPTS", value: "41 RUNS", sub: "Over various sessions", color: "#ffffff" },
-            { label: "ZUK ENCOUNTERS", value: "8 TIMES", sub: "Reached Wave 69", color: "#ff4500" },
+            { label: "ZUK ENCOUNTERS", value: "7 TIMES", sub: "Reached Wave 69", color: "#ff4500" },
             { label: "SUPPLIES BUDGET", value: "24.6M - 41.0M GP", sub: "~600k-1M GP per attempt", color: "#ffa726" }
         ];
 
